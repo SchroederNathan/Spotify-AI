@@ -1,6 +1,6 @@
 // pages/api/now-playing.js
 
-import { currentlyPlayingSong } from "../../lib/spotify";
+import { currentlyPlayingSong } from "../../../../lib/spotify";
 
 export default async function handler(req, res) {
   const response = await currentlyPlayingSong();
