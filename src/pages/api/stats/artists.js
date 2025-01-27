@@ -3,7 +3,7 @@
 import { topArtists } from "../../../../lib/spotify";
 
 export default async function handler(req, res) {
-  const response = await topArtists();
+  const response = await topArtists({ time_range: req.query.time_range });
   const { items } = await response.json();
 
   const artists = items.map((artist) => ({

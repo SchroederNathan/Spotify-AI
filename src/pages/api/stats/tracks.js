@@ -2,7 +2,7 @@ import { topTracks } from "../../../../lib/spotify";
 
 export default async function handler(req, res) {
   try {
-    const response = await topTracks();
+    const response = await topTracks({ time_range: req.query.time_range });
     if (!response.ok) {
       throw new Error(`Error fetching top tracks: ${response.statusText}`);
     }

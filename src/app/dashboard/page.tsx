@@ -19,8 +19,8 @@ import Songs from "./songs/page";
 
 const navigation = [
   { name: "Home", key: "Home" },
-  { name: "Songs", key: "Songs" },
-  { name: "Artists", key: "Artists" },
+  { name: "Songs", key: "Top Songs" },
+  { name: "Artists", key: "Top Artists" },
   { name: "Albums", key: "Albums" },
   { name: "Genres", key: "Genres" },
   { name: "Playlists", key: "Playlists" },
@@ -207,9 +207,9 @@ const Dashboard = () => {
           </header>
           <main>
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-              {activeTab === "Songs" && <Songs />}
+              {activeTab === "Top Songs" && <Songs />}
               {activeTab === "Albums" && <Albums />}
-              {activeTab === "Artists" && <Artists />}
+              {activeTab === "Top Artists" && <Artists />}
               {activeTab === "Genres" && <Genres />}
               {activeTab === "Playlists" && <Playlists />}
               {activeTab === "Home" && <div>Welcome to the Dashboard!</div>}
