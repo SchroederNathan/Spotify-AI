@@ -30,6 +30,7 @@ export default async function handler(req, res) {
   // Convert map to array and sort by count
   const sortedAlbums = Array.from(albumMap.values())
     .sort((a, b) => b.count - a.count)
+    .slice(0, 20) // Limit to top 20 albums by play count
     .map((item) => item.album);
 
   // Replace items with processed album data
