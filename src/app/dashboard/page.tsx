@@ -10,18 +10,25 @@ import {
 } from "@headlessui/react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+
+import Albums from "./albums/page";
+import Artists from "./artists/page";
+import Genres from "./genres/page";
+import Playlists from "./playlists/page";
+import Songs from "./songs/page";
+
 const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Songs", href: "#", current: false },
-  { name: "Albums", href: "#", current: false },
-  { name: "Artists", href: "#", current: false },
-  { name: "Genres", href: "#", current: false },
-  { name: "Playlists", href: "#", current: false },
+  { name: "Home", key: "Home" },
+  { name: "Songs", key: "Songs" },
+  { name: "Artists", key: "Artists" },
+  { name: "Albums", key: "Albums" },
+  { name: "Genres", key: "Genres" },
+  { name: "Playlists", key: "Playlists" },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Your Profile", href: "/profile" },
+  { name: "Settings", href: "/settings" },
+  { name: "Sign out", href: "/signout" },
 ];
 
 function classNames(...classes: string[]) {
@@ -29,11 +36,12 @@ function classNames(...classes: string[]) {
 }
 
 const Dashboard = () => {
+  const [activeTab, setActiveTab] = useState("Home");
+
   const [user, setUser] = useState<User>();
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
+
   useEffect(() => {
-    const fetchTracks = async () => {
+    const fetchUser = async () => {
       try {
         const response = await fetch("api/stats/user");
         if (!response.ok) {
@@ -44,33 +52,9 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Error fetching user:", error);
       }
-      try {
-        const response = await fetch("api/stats/tracks");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setTracks(data);
-      } catch (error) {
-        console.error("Error fetching tracks:", error);
-      }
     };
 
-    const fetchTopArtists = async () => {
-      try {
-        const response = await fetch("api/stats/artists");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setTopArtists(data);
-      } catch (error) {
-        console.error("Error fetching top artists:", error);
-      }
-    };
-
-    fetchTracks();
-    fetchTopArtists();
+    fetchUser();
   }, []);
 
   if (!user) {
@@ -98,19 +82,18 @@ const Dashboard = () => {
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (
-                    <a
+                    <button
                       key={item.name}
-                      href={item.href}
-                      aria-current={item.current ? "page" : undefined}
+                      onClick={() => setActiveTab(item.key)}
                       className={classNames(
-                        item.current
+                        activeTab === item.key
                           ? "border-green-500 "
                           : "border-transparent text-neutral-500 hover:border-neutral-500 hover:text-neutral-400",
-                        "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
+                        "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium cursor-pointer"
                       )}
                     >
                       {item.name}
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -118,7 +101,7 @@ const Dashboard = () => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <MenuButton className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden cursor-pointer">
+                    <MenuButton className="relative flex max-w-xs items-center rounded-full bg-neutral-500 text-sm focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden cursor-pointer">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <img
@@ -130,13 +113,13 @@ const Dashboard = () => {
                   </div>
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-neutral-800 py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
                         <a
                           href={item.href}
-                          className="block px-4 py-2 text-sm text-neutral-700 data-focus:bg-neutral-100 data-focus:outline-hidden"
+                          className="block px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:outline-hidden cursor-pointer"
                         >
                           {item.name}
                         </a>
@@ -158,32 +141,22 @@ const Dashboard = () => {
                     stroke={2}
                     className="hidden size-6 group-data-open:block"
                   />
-                  {/* <Bars3Icon
-                    aria-hidden="true"
-                    className="block size-6 group-data-open:hidden"
-                  /> */}
-                  {/* <XMarkIcon
-                   aria-hidden="true"
-                     className="hidden size-6 group-data-open:block"
-                   /> */}
                 </DisclosureButton>
               </div>
             </div>
           </div>
 
           <DisclosurePanel className="sm:hidden">
-            <div className="space-y-1 pt-2 pb-3">
+            <div className="space-y-1 pt-2 pb-3 w-full">
               {navigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
-                  as="a"
-                  href={item.href}
-                  aria-current={item.current ? "page" : undefined}
+                  onClick={() => setActiveTab(item.key)}
                   className={classNames(
-                    item.current
-                      ? "border-green-500 bg-neutral-800 text-white"
-                      : "border-transparent text-neutral-600 hover:border-neutral-300  hover:text-neutral-400",
-                    "block border-l-4 py-2 pr-4 pl-3 text-base font-medium"
+                    activeTab === item.key
+                      ? "border-green-500 bg-neutral-800 text-white w-full"
+                      : "border-transparent text-neutral-600 hover:border-neutral-300 hover:text-neutral-400 w-full",
+                    "block border-l-4 py-2 pr-4 pl-3 text-base font-medium text-left cursor-pointer"
                   )}
                 >
                   {item.name}
@@ -214,7 +187,7 @@ const Dashboard = () => {
                     key={item.name}
                     as="a"
                     href={item.href}
-                    className="block px-4 py-2 text-base font-medium text-neutral-500  hover:text-neutral-400"
+                    className="block px-4 py-2 text-base font-medium text-neutral-500 hover:text-neutral-400"
                   >
                     {item.name}
                   </DisclosureButton>
@@ -228,13 +201,18 @@ const Dashboard = () => {
           <header>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold tracking-tight text-white">
-                Dashboard
+                {activeTab}
               </h1>
             </div>
           </header>
           <main>
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-              {/* Your content */}
+              {activeTab === "Songs" && <Songs />}
+              {activeTab === "Albums" && <Albums />}
+              {activeTab === "Artists" && <Artists />}
+              {activeTab === "Genres" && <Genres />}
+              {activeTab === "Playlists" && <Playlists />}
+              {activeTab === "Home" && <div>Welcome to the Dashboard!</div>}
             </div>
           </main>
         </div>
