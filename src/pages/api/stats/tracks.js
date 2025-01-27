@@ -8,19 +8,12 @@ export default async function handler(req, res) {
     }
     const { items } = await response.json();
 
-    const tracks = items.map((track) => ({
-      title: track.name,
-      artist: track.artists.map((_artist) => _artist.name).join(", "),
-      url: track.external_urls.spotify,
-      coverImage: track.album.images[1],
-    }));
-
     res.setHeader(
       "Cache-Control",
       "public, s-maxage=86400, stale-while-revalidate=43200"
     );
 
-    return res.status(200).json(tracks);
+    return res.status(200).json(items);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

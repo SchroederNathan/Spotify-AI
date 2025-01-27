@@ -16,14 +16,13 @@ import Artists from "./artists/page";
 import Genres from "./genres/page";
 import Playlists from "./playlists/page";
 import Songs from "./songs/page";
-import { topAlbums } from "../../../lib/spotify";
 
 const navigation = [
   { name: "Home", key: "Home" },
   { name: "Songs", key: "Top Songs" },
   { name: "Artists", key: "Top Artists" },
-  { name: "Albums", key: "Albums" },
-  { name: "Genres", key: "Genres" },
+  { name: "Albums", key: "Top Albums" },
+  { name: "Genres", key: "Top Genres" },
   { name: "Playlists", key: "Playlists" },
 ];
 const userNavigation = [
@@ -72,7 +71,6 @@ const Dashboard = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
-
 
   return (
     <>
@@ -221,9 +219,9 @@ const Dashboard = () => {
           <main>
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
               {activeTab === "Top Songs" && <Songs />}
-              {activeTab === "Albums" && <Albums />}
+              {activeTab === "Top Albums" && <Albums />}
               {activeTab === "Top Artists" && <Artists />}
-              {activeTab === "Genres" && <Genres />}
+              {activeTab === "Top Genres" && <Genres />}
               {activeTab === "Playlists" && <Playlists />}
               {activeTab === "Home" && <div>Welcome to the Dashboard!</div>}
             </div>

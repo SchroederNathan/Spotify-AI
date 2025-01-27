@@ -8,8 +8,6 @@ export default async function handler(req, res) {
     }
     const { items } = await response.json();
 
-
-
     res.setHeader(
       "Cache-Control",
       "public, s-maxage=86400, stale-while-revalidate=43200"
