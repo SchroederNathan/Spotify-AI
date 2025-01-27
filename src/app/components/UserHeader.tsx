@@ -12,7 +12,7 @@ const stats = [
   { label: "Personal days left", value: 2 },
 ];
 
-export default function UserHeader({ user }: { user: User }) {
+export default function UserHeader({ user }: { user: User | undefined }) {
     const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (user) {

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/callback&scope=user-read-currently-playing+user-top-read 
 `;
@@ -74,12 +76,12 @@ export default function Home() {
             journey with detailed statistics.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
-            <a
-              href="#"
+            <Link
+              href="/dashboard"
               className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               Get started
-            </a>
+            </Link>
             <a href="#" className="text-sm/6 font-semibold text-white">
               Learn more <span aria-hidden="true">→</span>
             </a>
