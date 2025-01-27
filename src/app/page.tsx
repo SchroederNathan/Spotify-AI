@@ -1,8 +1,9 @@
+import { IconChevronRight } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
-
 export default function Home() {
-  const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/callback&scope=user-read-currently-playing+user-top-read 
-`;
+  //   const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/callback&scope=user-read-currently-playing+user-top-read
+  // `;
   return (
     <div className="relative isolate overflow-hidden ">
       <svg
@@ -49,21 +50,21 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:px-8 lg:py-40">
         <div className="mx-auto max-w-2xl shrink-0 lg:mx-0 lg:pt-8">
           <img
-            alt="Your Company"
+            alt="Spotify Logo"
             src="images/spotify-logo.png"
             className="h-11"
           />
           <div className="mt-24 sm:mt-32 lg:mt-16">
             <a href="#" className="inline-flex space-x-6">
               <span className="rounded-full bg-green-500/10 px-3 py-1 text-sm/6 font-semibold text-green-400 ring-1 ring-green-500/20 ring-inset">
-                What's new
+                What&apos;s new
               </span>
               <span className="inline-flex items-center space-x-2 text-sm/6 font-medium text-gray-300">
-                <span>Just shipped v1.0</span>
-                {/* <ChevronRightIcon
+                Just shipped v1.0
+                <IconChevronRight
                   aria-hidden="true"
                   className="size-5 text-gray-500"
-                /> */}
+                />
               </span>
             </a>
           </div>
@@ -89,9 +90,9 @@ export default function Home() {
         </div>
         <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:mt-0 lg:mr-0 lg:ml-10 lg:max-w-none lg:flex-none xl:ml-32">
           <div className="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-            <img
+            <Image
               alt="App screenshot"
-              src="https://tailwindui.com/plus/img/component-images/dark-project-app-screenshot.png"
+              src="/images/preview.png"
               width={2432}
               height={1442}
               className="w-[76rem] rounded-md bg-white/5 ring-1 shadow-2xl ring-white/10"

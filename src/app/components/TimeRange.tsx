@@ -1,6 +1,5 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { IconChevronDown } from "@tabler/icons-react";
-import { useState } from "react";
 
 export const enum TimeRanges {
   Short = "short_term",
