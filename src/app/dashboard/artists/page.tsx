@@ -43,7 +43,7 @@ const Artists = () => {
               <span className="text-sm text-neutral-400 w-4">{index + 1}.</span>
               <img
                 alt="Track Cover Image"
-                src={artist.coverImage.url}
+                src={artist.images[0].url}
                 className="size-12 flex-none rounded bg-neutral-800"
               />
               <div className="min-w-0 flex-auto">

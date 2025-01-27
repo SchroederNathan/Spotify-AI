@@ -58,7 +58,7 @@ export default function Home() {
             <a href="#" className="inline-flex space-x-6">
               <span className="rounded-full bg-green-500/10 px-3 py-1 text-sm/6 font-semibold text-green-400 ring-1 ring-green-500/20 ring-inset">
                 What&apos;s new
-              </span>
+            </span>
               <span className="inline-flex items-center space-x-2 text-sm/6 font-medium text-gray-300">
                 Just shipped v1.0
                 <IconChevronRight

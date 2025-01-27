@@ -16,6 +16,7 @@ import Artists from "./artists/page";
 import Genres from "./genres/page";
 import Playlists from "./playlists/page";
 import Songs from "./songs/page";
+import { topAlbums } from "../../../lib/spotify";
 
 const navigation = [
   { name: "Home", key: "Home" },
@@ -54,12 +55,24 @@ const Dashboard = () => {
       }
     };
 
+    const fetchAlbums = async () => {
+      try {
+        const response = await fetch("api/stats/albums");
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+      }
+    };
+
     fetchUser();
+    fetchAlbums();
   }, []);
 
   if (!user) {
     return <div>Loading...</div>;
   }
+
 
   return (
     <>
