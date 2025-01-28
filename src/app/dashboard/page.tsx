@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import Albums from "./albums/page";
 import Artists from "./artists/page";
 import Genres from "./genres/page";
+import Overview from "./home/page";
 import Playlists from "./playlists/page";
 import Songs from "./songs/page";
 
@@ -36,6 +37,7 @@ function classNames(...classes: string[]) {
 }
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Home");
 
   const [user, setUser] = useState<User>();
@@ -43,12 +45,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        setLoading(true);
         const response = await fetch("api/stats/user");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setUser(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -68,14 +72,10 @@ const Dashboard = () => {
     fetchAlbums();
   }, []);
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
-      <div className="min-h-full">
-        <Disclosure as="nav" className="border-b border-neutral-800 ">
+      <div className="min-h-full pt-12">
+        <Disclosure as="nav" className="border-b border-neutral-800 bg-neutral-900 fixed top-0 w-full z-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
@@ -115,11 +115,15 @@ const Dashboard = () => {
                     <MenuButton className="relative flex max-w-xs items-center rounded-full bg-neutral-500 text-sm focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden cursor-pointer">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        alt=""
-                        src={user?.images[0].url}
-                        className="size-8 rounded-full"
-                      />
+                      {loading ? (
+                        <div className="w-8 h-8 rounded-full bg-neutral-700 animate-pulse"></div>
+                      ) : (
+                        <img
+                          alt=""
+                          src={user?.images[0].url}
+                          className="size-8 rounded-full"
+                        />
+                      )}
                     </MenuButton>
                   </div>
                   <MenuItems
@@ -175,23 +179,36 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="border-t border-neutral-800 pt-4 pb-3">
-              <div className="flex items-center px-4">
-                <div className="shrink-0">
-                  <img
-                    alt=""
-                    src={user.images[0].url}
-                    className="size-10 rounded-full"
-                  />
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium text-white">
-                    {user.display_name}
+              {loading ? (
+                <div className="flex items-center px-4">
+                  <div className="shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-neutral-700 animate-pulse"></div>
                   </div>
-                  <div className="text-sm font-medium text-neutral-500">
-                    {user.email}
+                  <div className="ml-3">
+                    <div className="text-base font-medium text-white">
+                      Loading...
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex items-center px-4">
+                  <div className="shrink-0">
+                    <img
+                      alt=""
+                      src={user?.images[0].url}
+                      className="size-10 rounded-full"
+                    />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-base font-medium text-white">
+                      {user?.display_name}
+                    </div>
+                    <div className="text-sm font-medium text-neutral-500">
+                      {user?.email}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="mt-3 space-y-1">
                 {userNavigation.map((item) => (
                   <DisclosureButton
@@ -209,13 +226,19 @@ const Dashboard = () => {
         </Disclosure>
 
         <div className="py-10">
-          <header>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold tracking-tight text-white">
-                {activeTab}
-              </h1>
-            </div>
-          </header>
+          {activeTab === "Home" ? (
+            <></>
+          ) : (
+            <>
+              <header>
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <h1 className="text-3xl font-bold tracking-tight text-white">
+                    {activeTab}
+                  </h1>
+                </div>
+              </header>
+            </>
+          )}
           <main>
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
               {activeTab === "Top Songs" && <Songs />}
@@ -223,11 +246,31 @@ const Dashboard = () => {
               {activeTab === "Top Artists" && <Artists />}
               {activeTab === "Top Genres" && <Genres />}
               {activeTab === "Playlists" && <Playlists />}
-              {activeTab === "Home" && <div>Welcome to the Dashboard!</div>}
+              {activeTab === "Home" && <Overview user={user} />}
             </div>
           </main>
         </div>
       </div>
+      <footer className="bg-neutral-900 z-50">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+          <div className="flex justify-center gap-x-6 md:order-2">
+            {navigation.map((item) => (
+              <a
+                key={item.name}
+                onClick={() => setActiveTab(item.key)}
+                className="text-neutral-400 hover:text-neutral-300 cursor-pointer"
+              >
+                <span className="">{item.name}</span>
+              </a>
+            ))}
+          </div>
+          <p className="mt-8 text-center  text-sm/6 text-neutral-400 md:order-1 md:mt-0">
+            <a href="https://nathanschroeder.dev/" className="hover:text-neutral-300">
+              &copy; 2025 Nathan Schroeder.
+            </a>
+          </p>
+        </div>
+      </footer>
     </>
   );
 };
