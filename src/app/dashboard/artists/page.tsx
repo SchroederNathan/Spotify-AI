@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import TimeRange, { TimeRanges } from "@/app/components/TimeRange";
 import { useEffect, useState } from "react";
 
@@ -10,6 +11,7 @@ const Artists = () => {
 
   useEffect(() => {
     const fetchTracks = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `api/stats/artists?time_range=${timeRange}`
@@ -29,17 +31,19 @@ const Artists = () => {
     fetchTracks();
   }, [timeRange]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <TimeRange timeRange={timeRange} setTimeRange={setTimeRange} />
       <ul role="list" className="divide-y divide-neutral-800">
-        {artists.map((artist, index) => (
-          <li key={artist.name} className="flex justify-between gap-x-6 py-5">
-            <div className="flex min-w-0 gap-x-4 items-center">
+      {loading
+          ? Array.from({ length: 10 }).map((_, index) => (
+              <li key={index} className="flex justify-between gap-x-6 py-5">
+                <LoadingSkeleton index={index + 1} />
+              </li>
+            ))
+          : artists.map((artist, index) => (
+              <li key={artist.name} className="flex justify-between gap-x-6 py-5">
+                <div className="flex min-w-0 gap-x-4 items-center">
               <span className="text-sm text-neutral-400 w-4">{index + 1}.</span>
               <img
                 alt="Track Cover Image"

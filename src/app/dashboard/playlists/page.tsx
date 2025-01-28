@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import { useEffect, useState } from "react";
 
 const Playlists = () => {
@@ -8,6 +9,7 @@ const Playlists = () => {
 
   useEffect(() => {
     const fetchPlaylists = async () => {
+      setLoading(true);
       try {
         const response = await fetch("api/stats/playlists");
         if (!response.ok) {
@@ -24,15 +26,18 @@ const Playlists = () => {
     fetchPlaylists();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <ul role="list" className="divide-y divide-neutral-800">
-      {playlists.map((playlist, index) => (
-        <li key={playlist.name} className="flex justify-between gap-x-6 py-5">
-          <div className="flex min-w-0 gap-x-4 items-center">
+           {loading
+          ? Array.from({ length: 10 }).map((_, index) => (
+              <li key={index} className="flex justify-between gap-x-6 py-5">
+                <LoadingSkeleton index={index + 1} />
+              </li>
+            ))
+          : playlists.map((playlist, index) => (
+              <li key={playlist.name} className="flex justify-between gap-x-6 py-5">
+                <div className="flex min-w-0 gap-x-4 items-center">
             <span className="text-sm text-neutral-400 w-4">{index + 1}.</span>
             {playlist.images && playlist.images.length > 0 && (
             <img
