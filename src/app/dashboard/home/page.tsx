@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Overview = ({ user }: { user?: User }) => {
-  const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {

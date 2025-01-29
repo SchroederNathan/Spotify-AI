@@ -1,6 +1,7 @@
+import PlaylistPreview from "@/app/components/PlaylistPreview";
 import SongPreview from "@/app/components/SongPreview";
 import { Button, Textarea } from "@headlessui/react";
-import { IconArrowUp, IconSend } from "@tabler/icons-react";
+import { IconSend } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 
 const AI = () => {
@@ -48,7 +49,6 @@ const AI = () => {
     setChatHistory((prev) => [...prev, { role: "user", content: message }]);
 
     try {
-
       setMessage("");
       const res = await fetch("/api/ai/assistant", {
         method: "POST",
@@ -60,7 +60,6 @@ const AI = () => {
           topGenres: topGenres || [], // Ensure we always send an array
         }),
       });
-
 
       const data = await res.json();
       const parsedMessage = JSON.parse(data.message.text.value);
@@ -119,7 +118,9 @@ const AI = () => {
             {msg.request_type === "song" && (
               <SongPreview message={msg} className="mt-3" />
             )}
-            {/* {msg.request_type === "playlist" && <PlaylistPreview message={msg} className="mt-3" />} */}
+            {msg.request_type === "playlist" && (
+              <PlaylistPreview message={msg} className="mt-3" />
+            )}
           </div>
         ))}
         {loading && (
