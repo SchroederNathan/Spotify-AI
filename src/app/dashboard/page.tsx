@@ -257,7 +257,7 @@ const Dashboard = () => {
           </main>
         </div>
       </div>
-      <footer className="bg-neutral-900 z-50">
+      {/* <footer className="bg-neutral-900 z-50">
         <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
           <div className="flex justify-center gap-x-6 md:order-2">
             {navigation.map((item) => (
@@ -279,7 +279,7 @@ const Dashboard = () => {
             </a>
           </p>
         </div>
-      </footer>
+      </footer> */}
     </>
   );
 };

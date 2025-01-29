@@ -5,5 +5,5 @@ A web application that provides personalized Spotify music recommendations using
 ## Features
 
 - [ ] Add playlist integration
-- [ ] Improve AI UI
+- [x] Improve AI UI
 - [ ] Add stats to dashboard home
