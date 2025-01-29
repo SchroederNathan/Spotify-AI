@@ -17,6 +17,7 @@ import Genres from "./genres/page";
 import Overview from "./home/page";
 import Playlists from "./playlists/page";
 import Songs from "./songs/page";
+import AI from "./ai/page";
 
 const navigation = [
   { name: "Home", key: "Home" },
@@ -76,7 +77,10 @@ const Dashboard = () => {
   return (
     <>
       <div className="min-h-full pt-12">
-        <Disclosure as="nav" className="border-b border-neutral-800 bg-neutral-900 fixed top-0 w-full z-50">
+        <Disclosure
+          as="nav"
+          className="border-b border-neutral-800 bg-neutral-900 fixed top-0 w-full z-50"
+        >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
@@ -99,7 +103,7 @@ const Dashboard = () => {
                       onClick={() => setActiveTab(item.key)}
                       className={classNames(
                         activeTab === item.key
-                          ? "border-green-500 "
+                          ? "border-green-500"
                           : "border-transparent text-neutral-500 hover:border-neutral-500 hover:text-neutral-400",
                         "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium cursor-pointer"
                       )}
@@ -248,6 +252,7 @@ const Dashboard = () => {
               {activeTab === "Top Genres" && <Genres />}
               {activeTab === "Playlists" && <Playlists />}
               {activeTab === "Home" && <Overview user={user} />}
+              {activeTab === "AI" && <AI />}
             </div>
           </main>
         </div>
@@ -266,7 +271,10 @@ const Dashboard = () => {
             ))}
           </div>
           <p className="mt-8 text-center  text-sm/6 text-neutral-400 md:order-1 md:mt-0">
-            <a href="https://nathanschroeder.dev/" className="hover:text-neutral-300">
+            <a
+              href="https://nathanschroeder.dev/"
+              className="hover:text-neutral-300"
+            >
               &copy; 2025 Nathan Schroeder.
             </a>
           </p>

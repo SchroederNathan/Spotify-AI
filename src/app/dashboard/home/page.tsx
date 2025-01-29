@@ -1,4 +1,3 @@
-import AiChat from "@/app/components/AIChat";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -9,11 +8,9 @@ const Overview = ({ user }: { user?: User }) => {
 
   useEffect(() => {
     const fetchAlbums = async () => {
-      setLoading(true);
       const response = await fetch("api/stats/albums?time_range=short_term");
       const data = await response.json();
       setAlbums(data);
-      setLoading(false);
     };
     fetchAlbums();
   }, []);
@@ -115,8 +112,6 @@ const Overview = ({ user }: { user?: User }) => {
             </div>
           </div>
         </div>
-
-        <AiChat />
       </div>
     </div>
   );

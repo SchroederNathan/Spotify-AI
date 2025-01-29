@@ -172,3 +172,21 @@ interface Playlist {
   type: string;
   uri: string;
 }
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  song?: {
+    artist: string;
+    name: string;
+    album: string;
+  };
+  playlist?: {
+    name: string;
+    songs: {
+      artist: string;
+      name: string;
+      album: string;
+    }[];
+  };
+}
