@@ -25,6 +25,7 @@ const navigation = [
   { name: "Albums", key: "Top Albums" },
   { name: "Genres", key: "Top Genres" },
   { name: "Playlists", key: "Playlists" },
+  { name: "AI", key: "AI" },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
@@ -91,7 +92,7 @@ const Dashboard = () => {
                     className="hidden h-8 w-auto lg:block"
                   />
                 </div>
-                <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+                <div className="hidden md:-my-px md:ml-6 md:flex md:space-x-8">
                   {navigation.map((item) => (
                     <button
                       key={item.name}
@@ -108,7 +109,7 @@ const Dashboard = () => {
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className="hidden md:ml-6 md:flex md:items-center">
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
@@ -143,7 +144,7 @@ const Dashboard = () => {
                   </MenuItems>
                 </Menu>
               </div>
-              <div className="-mr-2 flex items-center sm:hidden">
+              <div className="-mr-2 flex items-center md:hidden">
                 {/* Mobile menu button */}
                 <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md  p-2 text-neutral-400 cursor-pointer">
                   <span className="absolute -inset-0.5" />
@@ -161,7 +162,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <DisclosurePanel className="sm:hidden">
+          <DisclosurePanel className="md:hidden">
             <div className="space-y-1 pt-2 pb-3 w-full">
               {navigation.map((item) => (
                 <DisclosureButton

@@ -1,3 +1,4 @@
+import AiChat from "@/app/components/AIChat";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -8,9 +9,11 @@ const Overview = ({ user }: { user?: User }) => {
 
   useEffect(() => {
     const fetchAlbums = async () => {
+      setLoading(true);
       const response = await fetch("api/stats/albums?time_range=short_term");
       const data = await response.json();
       setAlbums(data);
+      setLoading(false);
     };
     fetchAlbums();
   }, []);
@@ -75,7 +78,7 @@ const Overview = ({ user }: { user?: User }) => {
           className="aspect-801/1036 w-[50.0625rem] bg-linear-to-tr from-green-500 to-green-300 opacity-20"
         />
       </div>
-      <div className="overflow-hidden">
+      <div className="overflow-visible">
         <div className="mx-auto max-w-7xl px-6 pb-24 lg:px-8 ">
           <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
             <div className="relative w-full lg:max-w-xl lg:shrink-0 xl:max-w-2xl">
@@ -112,6 +115,8 @@ const Overview = ({ user }: { user?: User }) => {
             </div>
           </div>
         </div>
+
+        <AiChat />
       </div>
     </div>
   );
