@@ -1,11 +1,22 @@
 import SongPreview from "@/app/components/SongPreview";
 import { Button } from "@headlessui/react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const AI = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<Array<Message>>([]);
   const [loading, setLoading] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatHistory]);
 
   const getSong = async (query: string): Promise<Track> => {
     console.log(query);
@@ -48,7 +59,8 @@ const AI = () => {
       ]);
 
       console.log(parsedMessage);
-    //   console.log(await getSong(parsedMessage.song_id));
+      
+      setMessage("");
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -59,7 +71,7 @@ const AI = () => {
 
   return (
     <div className="mx-auto">
-      <div className="mb-4 space-y-4 h-[60vh] overflow-y-auto">
+      <div ref={chatContainerRef} className="mb-4 space-y-4 h-[60vh] overflow-y-auto">
         {chatHistory.map((msg, index) => (
           <div key={index}>
             <div
