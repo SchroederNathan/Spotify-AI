@@ -7,7 +7,26 @@ const AI = () => {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<Array<Message>>([]);
   const [loading, setLoading] = useState(false);
+  const [topGenres, setTopGenres] = useState<string[]>([]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await fetch(`api/stats/genres?time_range=short_term`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        // Take only the first 5 genres from the response
+        setTopGenres(data.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -25,24 +44,26 @@ const AI = () => {
     e.preventDefault();
     setLoading(true);
 
-    setMessage("");
-
     // Add user message to chat history
     setChatHistory((prev) => [...prev, { role: "user", content: message }]);
 
     try {
+
+      setMessage("");
       const res = await fetch("/api/ai/assistant", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({
+          message,
+          topGenres: topGenres || [], // Ensure we always send an array
+        }),
       });
+
 
       const data = await res.json();
       const parsedMessage = JSON.parse(data.message.text.value);
-
-      console.log(parsedMessage);
 
       // Add AI response to chat history
       setChatHistory((prev) => [
@@ -50,6 +71,7 @@ const AI = () => {
         {
           role: "assistant",
           content: parsedMessage.text_response,
+          request_type: parsedMessage.request_type,
           song: parsedMessage.song,
           playlist: parsedMessage.playlist,
         },
@@ -60,12 +82,12 @@ const AI = () => {
       console.error("Error:", error);
     } finally {
       setLoading(false);
-      setMessage(""); // Clear input after sending
+      setMessage("");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
@@ -94,7 +116,10 @@ const AI = () => {
                 {msg.content}
               </div>
             </div>
-            {msg.song && <SongPreview message={msg} className="mt-3" />}
+            {msg.request_type === "song" && (
+              <SongPreview message={msg} className="mt-3" />
+            )}
+            {/* {msg.request_type === "playlist" && <PlaylistPreview message={msg} className="mt-3" />} */}
           </div>
         ))}
         {loading && (

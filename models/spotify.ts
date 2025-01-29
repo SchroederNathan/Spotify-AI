@@ -176,6 +176,7 @@ interface Playlist {
 interface Message {
   role: "user" | "assistant";
   content: string;
+  request_type?: string;
   song?: {
     artist: string;
     name: string;

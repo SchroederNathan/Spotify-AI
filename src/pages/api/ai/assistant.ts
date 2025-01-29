@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { message } = req.body;
+    const { message, topGenres } = req.body;
 
     // Create or retrieve thread ID from session/storage
     const thread = await openai.beta.threads.create();
@@ -22,10 +22,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       content: message
     });
 
-    // Create a run
+    // Create a run with user's top genres context
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: process.env.OPENAI_ASSISTANT_ID!,
-      instructions: "You are a Spotify music recommendation assistant. Help users discover new music based on their preferences. Your only task allowed is to recommend music. "
+      instructions: `You are a Spotify music recommendation assistant. Help users discover new music based on their preferences. Your only task allowed is to recommend music. 
+      User's top genres: ${topGenres.join(', ')}`
     });
 
     // Poll for the run to complete
