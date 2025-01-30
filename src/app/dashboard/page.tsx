@@ -12,6 +12,7 @@ import { IconMenu2, IconX } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import Image from "next/image";
 import AI from "./ai/page";
 import Albums from "./albums/page";
 import Artists from "./artists/page";
@@ -41,6 +42,8 @@ function classNames(...classes: string[]) {
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
+
+
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
 
@@ -67,14 +70,22 @@ const Dashboard = () => {
         } finally {
           setLoading(false);
         }
+      } else {
+        if (session) {
+          signOut({ redirect: true, callbackUrl: "/" });
+        }
       }
     };
 
     fetchUser();
   }, [session, status]);
 
-  if (status === "loading" || loading) {
-    return <div>Loading...</div>;
+  if (status === "loading") {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-neutral-800 border-t-green-500" />
+      </div>
+    );
   }
 
   return (
@@ -88,14 +99,18 @@ const Dashboard = () => {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex shrink-0 items-center">
-                  <img
-                    alt="Your Company"
-                    src="images/spotify-logo.png"
+                  <Image
+                    alt="Spotify Logo"
+                    src="/images/spotify-logo.png"
+                    width={44}
+                    height={44}
                     className="block h-8 w-auto lg:hidden"
                   />
-                  <img
-                    alt="Your Company"
-                    src="images/spotify-logo.png"
+                  <Image
+                    alt="Spotify Logo"
+                    src="/images/spotify-logo.png"
+                    width={44}
+                    height={44}
                     className="hidden h-8 w-auto lg:block"
                   />
                 </div>
@@ -126,9 +141,11 @@ const Dashboard = () => {
                       {loading ? (
                         <div className="w-8 h-8 rounded-full bg-neutral-700 animate-pulse"></div>
                       ) : (
-                        <img
-                          alt=""
-                          src={user?.images[0].url}
+                        <Image
+                          alt="Profile Picture"
+                          src={user!.images[0].url}
+                          width={32}
+                          height={32}
                           className="size-8 rounded-full"
                         />
                       )}
@@ -187,7 +204,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="border-t border-neutral-800 pt-4 pb-3">
-              {loading ? (
+              {loading  ? (
                 <div className="flex items-center px-4">
                   <div className="shrink-0">
                     <div className="w-10 h-10 rounded-full bg-neutral-700 animate-pulse"></div>
@@ -201,10 +218,13 @@ const Dashboard = () => {
               ) : (
                 <div className="flex items-center px-4">
                   <div className="shrink-0">
-                    <img
-                      alt=""
-                      src={user?.images[0].url}
-                      className="size-10 rounded-full"
+
+                    <Image
+                      alt="Profile Picture"
+                      src={user!.images[0].url}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
                     />
                   </div>
                   <div className="ml-3">
@@ -254,7 +274,7 @@ const Dashboard = () => {
               {activeTab === "Top Artists" && <Artists />}
               {activeTab === "Top Genres" && <Genres />}
               {activeTab === "Playlists" && <Playlists />}
-              {activeTab === "Home" && <Overview user={user} />}
+              {activeTab === "Home" && <Overview />}
               {activeTab === "AI" && <AI />}
             </div>
           </main>

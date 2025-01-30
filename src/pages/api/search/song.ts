@@ -1,6 +1,10 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { searchSong } from "../../../../lib/spotify";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Track | { error: string }>
+) {
   try {
     // Extract track and artist from the query
     const { track, artist, album } = req.query;
@@ -11,10 +15,10 @@ export default async function handler(req: any, res: any) {
 
     // Create proper query string with URLSearchParams
     const queryParams = new URLSearchParams({
-      track: track,
-      ...(artist && { artist: artist }),
-      ...(album && { album: album }),
-    }).toString();
+      track: Array.isArray(track) ? track[0] : track,
+      ...(artist && { artist: Array.isArray(artist) ? artist[0] : artist }),
+      ...(album && { album: Array.isArray(album) ? album[0] : album }),
+    });
 
     console.log("Query string:", queryParams);
 

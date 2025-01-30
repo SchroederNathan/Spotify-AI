@@ -2,6 +2,7 @@
 
 import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import TimeRange, { TimeRanges } from "@/app/components/TimeRange";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Artists = () => {
@@ -35,29 +36,36 @@ const Artists = () => {
     <>
       <TimeRange timeRange={timeRange} setTimeRange={setTimeRange} />
       <ul role="list" className="divide-y divide-neutral-800">
-      {loading
+        {loading
           ? Array.from({ length: 10 }).map((_, index) => (
               <li key={index} className="flex justify-between gap-x-6 py-5">
                 <LoadingSkeleton index={index + 1} />
               </li>
             ))
           : artists.map((artist, index) => (
-              <li key={artist.name} className="flex justify-between gap-x-6 py-5">
+              <li
+                key={artist.name}
+                className="flex justify-between gap-x-6 py-5"
+              >
                 <div className="flex min-w-0 gap-x-4 items-center">
-              <span className="text-sm text-neutral-400 w-4">{index + 1}.</span>
-              <img
-                alt="Track Cover Image"
-                src={artist.images[0].url}
-                className="size-12 flex-none rounded bg-neutral-800"
-              />
-              <div className="min-w-0 flex-auto">
-                <p className="text-sm/6 font-semibold text-white">
-                  {artist.name}
-                </p>
-              </div>
-            </div>
-          </li>
-        ))}
+                  <span className="text-sm text-neutral-400 w-4">
+                    {index + 1}.
+                  </span>
+                  <Image
+                    alt="Track Cover Image"
+                    src={artist.images[0].url}
+                    width={48}
+                    height={48}
+                    className="flex-none rounded bg-neutral-800"
+                  />
+                  <div className="min-w-0 flex-auto">
+                    <p className="text-sm/6 font-semibold text-white">
+                      {artist.name}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))}
       </ul>
     </>
   );

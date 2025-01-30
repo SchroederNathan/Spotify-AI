@@ -2,6 +2,7 @@
 
 import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import TimeRange, { TimeRanges } from "@/app/components/TimeRange";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Songs = () => {
@@ -45,10 +46,12 @@ const Songs = () => {
                   <span className="text-sm text-neutral-400 w-4">
                     {index + 1}.
                   </span>
-                  <img
+                  <Image
                     alt="Track Cover Image"
                     src={song.album.images[0].url}
-                    className="size-12 flex-none rounded bg-neutral-800"
+                    width={48}
+                    height={48}
+                    className="flex-none rounded bg-neutral-800"
                   />
                   <div className="min-w-0 flex-auto">
                     <p className="text-sm/6 font-semibold text-white">

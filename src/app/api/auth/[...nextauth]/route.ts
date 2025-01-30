@@ -1,5 +1,5 @@
-import NextAuth from "next-auth/next";
 import { type NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth/next";
 import SpotifyProvider from "next-auth/providers/spotify";
 
 const options: NextAuthOptions = {
@@ -9,9 +9,10 @@ const options: NextAuthOptions = {
       clientSecret: process.env.CLIENT_SECRET || "",
       authorization: {
         params: {
-          scope: "user-read-email playlist-read-private playlist-modify-private playlist-modify-public user-top-read",
-        }
-      }
+          scope:
+            "user-read-email playlist-read-private playlist-modify-private playlist-modify-public user-top-read",
+        },
+      },
     }),
   ],
   debug: true,
@@ -39,14 +40,14 @@ const options: NextAuthOptions = {
       return true;
     },
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   pages: {
-    signIn: '/',
-    error: '/', // Redirect to home page on error
+    signIn: "/",
+    error: "/", // Redirect to home page on error
   },
 };
 

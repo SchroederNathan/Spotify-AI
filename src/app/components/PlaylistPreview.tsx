@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@headlessui/react";
 import { IconPlayerPlay } from "@tabler/icons-react";
 import Image from "next/image";
@@ -19,7 +21,11 @@ const PlaylistPreview = ({
       setLoading(true);
       if (!message.playlist) return;
 
-      const songs = message.playlist.songs.map(async (song: any) => {
+      const songs = message.playlist.songs.map(async (song: {
+        name: string;
+        artist: string;
+        album: string;
+      }) => {
         const query = new URLSearchParams({
           track: song.name,
           artist: song.artist,

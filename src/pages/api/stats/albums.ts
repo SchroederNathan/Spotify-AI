@@ -1,10 +1,24 @@
 // pages/api/stats/albums.js
 
+import { NextApiRequest, NextApiResponse } from "next";
 import { topAlbums } from "../../../../lib/spotify";
 
-export default async function handler(req: any, res: any) {
+interface Album {
+  id: string;
+  name: string;
+  images: Array<{ url: string }>;
+}
+
+interface Track {
+  album: Album;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Album[] | { error: string }>
+) {
   try {
-    const response = await topAlbums(req, req.query.time_range);
+    const response = await topAlbums(req, req.query.time_range as string);
     if (!response.ok) {
       throw new Error(`Error fetching top albums: ${response.statusText}`);
     }
@@ -14,7 +28,7 @@ export default async function handler(req: any, res: any) {
     const albumMap = new Map();
 
     // Process each track and count album occurrences
-    items.forEach((track: any) => {
+    items.forEach((track: Track) => {
       const album = track.album;
       const albumId = album.id;
 
@@ -40,7 +54,6 @@ export default async function handler(req: any, res: any) {
     // Replace items with processed album data
     const albums = sortedAlbums;
 
-
     res.setHeader(
       "Cache-Control",
       "public, s-maxage=86400, stale-while-revalidate=43200"
@@ -49,6 +62,5 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json(albums);
   } catch (error) {
     console.error("Error in /api/stats/albums:", error);
-    return res.status(500).json({ error: error });
   }
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { IconPlayerPlay } from "@tabler/icons-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -12,7 +14,7 @@ const SongPreview = ({
   const [loading, setLoading] = useState(true);
   const [song, setSong] = useState<Track | null>(null);
 
-  const songQuery = useEffect(() => {
+  useEffect(() => {
     const fetchSong = async () => {
       setLoading(true);
       if (!message.song) return;

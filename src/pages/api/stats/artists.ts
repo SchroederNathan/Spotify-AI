@@ -1,12 +1,13 @@
 // pages/api/stats/artists.js
 
+import { NextApiRequest, NextApiResponse } from "next";
 import { topArtists } from "../../../../lib/spotify";
 
-export default async function handler(req: any, res: any) {
-  const response = await topArtists(req.query.time_range, req);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const response = await topArtists(req.query.time_range as string, req);
   const { items } = await response.json();
 
-  res.setHeader(
+  res.setHeader(    
     "Cache-Control",
     "public, s-maxage=86400, stale-while-revalidate=43200"
   );

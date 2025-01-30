@@ -1,8 +1,12 @@
 // pages/api/now-playing.js
 
+import { NextApiRequest, NextApiResponse } from "next";
 import { currentlyPlayingSong } from "../../../../lib/spotify";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const response = await currentlyPlayingSong(req);
 
   if (response.status === 204 || response.status > 400) {
@@ -17,7 +21,9 @@ export default async function handler(req: any, res: any) {
 
   const isPlaying = song.is_playing;
   const title = song.item.name;
-  const artist = song.item.artists.map((_artist: any) => _artist.name).join(", ");
+  const artist = song.item.artists
+    .map((_artist: Artist) => _artist.name)
+    .join(", ");
   const album = song.item.album.name;
   const albumImageUrl = song.item.album.images[0].url;
   const songUrl = song.item.external_urls.spotify;

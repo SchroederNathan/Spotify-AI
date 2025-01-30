@@ -1,21 +1,39 @@
+"use client";
+
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const Overview = ({ user }: { user?: User }) => {
+const Overview = () => {
+  const [user, setUser] = useState<User>();
   const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/stats/user");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
     const fetchAlbums = async () => {
       const response = await fetch("/api/stats/albums?time_range=short_term");
       const data = await response.json();
       setAlbums(data);
     };
+
+    fetchUser();
     fetchAlbums();
   }, []);
 
   const AlbumImage = ({ album, index }: { album?: Album; index: number }) => (
-    <div className="relative">
+    <div className="relative" key={index}>
       {album?.images[0]?.url ? (
         <Image
           src={album.images[0].url}

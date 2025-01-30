@@ -17,7 +17,7 @@ export default async function handler(
     }
 
     // Extract URIs from the tracks
-    const uris = tracks.map((track: any) => track.uri);
+    const uris = tracks.map((track: Track) => track.uri);
 
     const playlist = await createPlaylist(name, uris, req);
 

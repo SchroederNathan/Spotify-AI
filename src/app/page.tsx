@@ -16,9 +16,9 @@ export default function Home() {
       router.push("/dashboard");
     } else {
       try {
-        await signIn("spotify", { 
+        await signIn("spotify", {
           callbackUrl: "/dashboard",
-          redirect: true 
+          redirect: true,
         });
       } catch (error) {
         console.error("Sign in error:", error);
@@ -71,10 +71,11 @@ export default function Home() {
       </div>
       <div className="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:px-8 lg:py-40">
         <div className="mx-auto max-w-2xl shrink-0 lg:mx-0 lg:pt-8">
-          <img
+          <Image
             alt="Spotify Logo"
-            src="images/spotify-logo.png"
-            className="h-11"
+            src="/images/spotify-logo.png"
+            width={44}
+            height={44}
           />
           <div className="mt-24 sm:mt-32 lg:mt-16">
             <a href="#" className="inline-flex space-x-6">

@@ -1,3 +1,5 @@
+"use client";
+
 import PlaylistPreview from "@/app/components/PlaylistPreview";
 import SongPreview from "@/app/components/SongPreview";
 import { Button, Textarea } from "@headlessui/react";

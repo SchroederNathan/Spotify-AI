@@ -1,8 +1,14 @@
 import { topTracks } from "../../../../lib/spotify";
-
-export default async function handler(req: any, res: any) {
+import { NextApiRequest, NextApiResponse } from "next";
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
-    const response = await topTracks({ time_range: req.query.time_range }, req);
+    const response = await topTracks(
+      { time_range: req.query.time_range as string },
+      req
+    );
     if (!response.ok) {
       throw new Error(`Error fetching top tracks: ${response.statusText}`);
     }
