@@ -1,12 +1,12 @@
 import { searchSong } from "../../../../lib/spotify";
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   try {
     // Extract track and artist from the query
     const { track, artist, album } = req.query;
-    
+
     if (!track) {
-      return res.status(400).json({ error: 'Track name is required' });
+      return res.status(400).json({ error: "Track name is required" });
     }
 
     // Create proper query string with URLSearchParams
@@ -18,11 +18,11 @@ export default async function handler(req, res) {
 
     console.log("Query string:", queryParams);
 
-    const response = await searchSong(queryParams);
+    const response = await searchSong(queryParams, req);
     const data = await response.json();
 
     if (!data.tracks || !data.tracks.items.length) {
-      return res.status(404).json({ error: 'No tracks found' });
+      return res.status(404).json({ error: "No tracks found" });
     }
 
     res.setHeader(
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json(data.tracks.items[0]);
   } catch (error) {
-    console.error('Error searching song:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error searching song:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }

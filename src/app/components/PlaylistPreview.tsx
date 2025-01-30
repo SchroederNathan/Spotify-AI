@@ -12,6 +12,7 @@ const PlaylistPreview = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [songs, setSongs] = useState<Track[] | null>(null);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -47,6 +48,39 @@ const PlaylistPreview = ({
 
     fetchSongs();
   }, [message.playlist]);
+
+  const handleCreatePlaylist = async () => {
+    console.log("Creating playlist");
+    if (!songs || !message.playlist?.name) return;
+
+    setCreating(true);
+    try {
+      const response = await fetch("/api/playlist/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: message.playlist.name,
+          tracks: songs.map((song) => ({ uri: song.uri })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create playlist");
+      }
+
+      const playlist = await response.json();
+      console.log("Playlist created:", playlist);
+      // Optionally open the playlist in Spotify
+      window.open(playlist.external_urls.spotify, "_blank");
+    } catch (error) {
+      console.error("Error creating playlist:", error);
+    } finally {
+      console.log("Created playlist");
+      setCreating(false);
+    }
+  };
 
   return (
     <>
@@ -84,7 +118,9 @@ const PlaylistPreview = ({
               <div className="mt-2 shrink-0">
                 <Button
                   type="button"
-                  className="relative inline-flex cursor-pointer items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  onClick={handleCreatePlaylist}
+                  disabled={creating}
+                  className="relative inline-flex cursor-pointer items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Image
                     width={24}
@@ -93,7 +129,7 @@ const PlaylistPreview = ({
                     alt="Spotify"
                     className="mr-2"
                   />
-                  Create Playlist
+                  {creating ? "Creating..." : "Create Playlist"}
                 </Button>
               </div>
             </div>

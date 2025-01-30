@@ -7,7 +7,7 @@ const Overview = ({ user }: { user?: User }) => {
 
   useEffect(() => {
     const fetchAlbums = async () => {
-      const response = await fetch("api/stats/albums?time_range=short_term");
+      const response = await fetch("/api/stats/albums?time_range=short_term");
       const data = await response.json();
       setAlbums(data);
     };

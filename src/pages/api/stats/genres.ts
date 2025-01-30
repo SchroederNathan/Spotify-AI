@@ -1,15 +1,15 @@
 import { topGenres } from "../../../../lib/spotify";
 
-export default async function handler(req, res) {
-  const response = await topGenres({ time_range: req.query.time_range });
+export default async function handler(req: any, res: any) {
+  const response = await topGenres(req, req.query.time_range);
   const { items } = await response.json();
 
   // Create a map to count genre occurrences
   const genreCounts = new Map();
-  
+
   // Count occurrences of each genre across all artists
-  items.forEach((artist) => {
-    artist.genres.forEach(genre => {
+  items.forEach((artist: any) => {
+    artist.genres.forEach((genre: any) => {
       genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1);
     });
   });

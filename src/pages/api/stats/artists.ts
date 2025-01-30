@@ -2,8 +2,8 @@
 
 import { topArtists } from "../../../../lib/spotify";
 
-export default async function handler(req, res) {
-  const response = await topArtists({ time_range: req.query.time_range });
+export default async function handler(req: any, res: any) {
+  const response = await topArtists(req.query.time_range, req);
   const { items } = await response.json();
 
   res.setHeader(

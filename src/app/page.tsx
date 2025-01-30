@@ -1,9 +1,31 @@
+"use client";
+import { Button } from "@headlessui/react";
 import { IconChevronRight } from "@tabler/icons-react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
-  //   const authUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=http://localhost:3000/callback&scope=user-read-currently-playing+user-top-read
-  // `;
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  console.log(session);
+
+  const handleSignIn = async () => {
+    if (session) {
+      router.push("/dashboard");
+    } else {
+      try {
+        await signIn("spotify", { 
+          callbackUrl: "/dashboard",
+          redirect: true 
+        });
+      } catch (error) {
+        console.error("Sign in error:", error);
+      }
+    }
+  };
+
   return (
     <div className="relative isolate overflow-hidden ">
       <svg
@@ -58,7 +80,7 @@ export default function Home() {
             <a href="#" className="inline-flex space-x-6">
               <span className="rounded-full bg-green-500/10 px-3 py-1 text-sm/6 font-semibold text-green-400 ring-1 ring-green-500/20 ring-inset">
                 What&apos;s new
-            </span>
+              </span>
               <span className="inline-flex items-center space-x-2 text-sm/6 font-medium text-gray-300">
                 Just shipped v1.0
                 <IconChevronRight
@@ -77,12 +99,12 @@ export default function Home() {
             journey with detailed statistics.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
-            <Link
-              href="/dashboard"
-              className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            <Button
+              onClick={() => handleSignIn()}
+              className="rounded-md cursor-pointer bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
               Get started
-            </Link>
+            </Button>
             <a href="#" className="text-sm/6 font-semibold text-white">
               Learn more <span aria-hidden="true">→</span>
             </a>

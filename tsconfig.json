@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/auth.js", "lib/spotify.js", "src/app/api/stats/tracks.js", "src/pages/api/stats/ai.js", "src/pages/api/search/song.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/auth.js", "lib/spotify.ts", "src/app/api/stats/tracks.js", "src/pages/api/stats/ai.js", "src/pages/api/search/song.ts"],
   "exclude": ["node_modules"]
 }

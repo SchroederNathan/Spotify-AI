@@ -1,10 +1,10 @@
-import { userPlaylists } from "../../../../lib/spotify";
+import { topTracks } from "../../../../lib/spotify";
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   try {
-    const response = await userPlaylists();
+    const response = await topTracks({ time_range: req.query.time_range }, req);
     if (!response.ok) {
-      throw new Error(`Error fetching playlists: ${response.statusText}`);
+      throw new Error(`Error fetching top tracks: ${response.statusText}`);
     }
     const { items } = await response.json();
 

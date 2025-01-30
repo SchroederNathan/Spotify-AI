@@ -9,15 +9,16 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import AI from "./ai/page";
 import Albums from "./albums/page";
 import Artists from "./artists/page";
 import Genres from "./genres/page";
 import Overview from "./home/page";
 import Playlists from "./playlists/page";
 import Songs from "./songs/page";
-import AI from "./ai/page";
 
 const navigation = [
   { name: "Home", key: "Home" },
@@ -39,39 +40,42 @@ function classNames(...classes: string[]) {
 }
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
 
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("api/stats/user");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+      if (status === "authenticated" && session) {
+        try {
+          const response = await fetch("/api/stats/user");
+          if (!response.ok) {
+            const error = await response.json();
+            if (response.status === 401) {
+              // Redirect to sign in page or refresh the session
+              signOut({ redirect: true, callbackUrl: "/" });
+              return;
+            }
+            throw new Error(error.message);
+          }
+          const data = await response.json();
+          setUser(data);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        } finally {
+          setLoading(false);
         }
-        const data = await response.json();
-        setUser(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-
-    const fetchAlbums = async () => {
-      try {
-        const response = await fetch("api/stats/albums");
-        const data = await response.json();
-      } catch (error) {
-        console.error("Error fetching albums:", error);
       }
     };
 
     fetchUser();
-    fetchAlbums();
-  }, []);
+  }, [session, status]);
+
+  if (status === "loading" || loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
