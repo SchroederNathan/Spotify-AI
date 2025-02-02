@@ -1,5 +1,8 @@
 "use client";
 
+import { timeRangeLabels, TimeRanges } from "@/app/components/TimeRange";
+import TopAlbumsCard from "@/app/components/TopAlbumsCard";
+import TopTracksCard from "@/app/components/TopTracksCard";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -7,7 +10,10 @@ import { useEffect, useState } from "react";
 const Overview = () => {
   const [user, setUser] = useState<User>();
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [songs, setSongs] = useState<Track[]>([]);
 
+  const [loadingSongs, setLoadingSongs] = useState(true);
+  const [loadingAlbums, setLoadingAlbums] = useState(true);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -26,10 +32,20 @@ const Overview = () => {
       const response = await fetch("/api/stats/albums?time_range=short_term");
       const data = await response.json();
       setAlbums(data);
+      setLoadingAlbums(false);
+    };
+
+    const fetchSongs = async () => {
+      const response = await fetch("/api/stats/tracks?time_range=short_term");
+      const data = await response.json();
+      setSongs(data);
+      setLoadingSongs(false);
+
     };
 
     fetchUser();
     fetchAlbums();
+    fetchSongs();
   }, []);
 
   const AlbumImage = ({ album, index }: { album?: Album; index: number }) => (
@@ -129,7 +145,22 @@ const Overview = () => {
             </div>
           </div>
         </div>
-
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <h2 className=" text-base/7 font-semibold text-green-600">
+            Past {timeRangeLabels[TimeRanges.Short]}
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TopTracksCard
+              loading={loadingSongs}
+              songs={songs}
+              timeRange={TimeRanges.Short}
+            />
+            <TopAlbumsCard
+              loading={loadingAlbums}
+              albums={albums}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

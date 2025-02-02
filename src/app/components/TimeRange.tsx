@@ -7,7 +7,7 @@ export const enum TimeRanges {
   Long = "long_term",
 }
 
-const timeRangeLabels = {
+export const timeRangeLabels = {
   [TimeRanges.Short]: "4 weeks",
   [TimeRanges.Medium]: "6 months",
   [TimeRanges.Long]: "1 year",
