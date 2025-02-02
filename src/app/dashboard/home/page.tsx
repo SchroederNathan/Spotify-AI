@@ -153,7 +153,7 @@ const Overview = () => {
             <TopTracksCard
               loading={loadingSongs}
               songs={songs}
-              timeRange={TimeRanges.Short}
+
             />
             <TopAlbumsCard
               loading={loadingAlbums}
