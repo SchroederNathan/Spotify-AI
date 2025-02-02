@@ -5,12 +5,13 @@ import TopAlbumsCard from "@/app/components/TopAlbumsCard";
 import TopTracksCard from "@/app/components/TopTracksCard";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Overview = () => {
   const [user, setUser] = useState<User>();
   const [albums, setAlbums] = useState<Album[]>([]);
   const [songs, setSongs] = useState<Track[]>([]);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   const [loadingSongs, setLoadingSongs] = useState(true);
   const [loadingAlbums, setLoadingAlbums] = useState(true);
@@ -123,6 +124,10 @@ const Overview = () => {
                 <div className="mt-10 flex items-center gap-x-6">
                   <a
                     href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      statsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                     className="rounded-md flex h-12 items-center gap-x-2 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                   >
                     View Stats
@@ -146,11 +151,14 @@ const Overview = () => {
             </div>
           </div>
         </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div 
+          className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24" 
+          ref={statsRef}
+        >
           <h2 className=" text-base/7 font-semibold text-green-600">
             Past {timeRangeLabels[TimeRanges.Short]}
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-18">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-18" >
             <TopTracksCard loading={loadingSongs} songs={songs} />
             <TopAlbumsCard loading={loadingAlbums} albums={albums} />
           </div>

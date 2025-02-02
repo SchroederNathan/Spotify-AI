@@ -96,7 +96,7 @@ const Dashboard = () => {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
-                <div className="flex shrink-0 items-center">
+                <a className="flex shrink-0 items-center cursor-pointer" onClick={() => setActiveTab("Home")}>
                   <Image
                     alt="Spotify Logo"
                     src="/images/spotify-logo.png"
@@ -111,7 +111,7 @@ const Dashboard = () => {
                     height={44}
                     className="hidden h-8 w-auto lg:block"
                   />
-                </div>
+                </a>
                 <div className="hidden md:-my-px md:ml-6 md:flex md:space-x-8">
                   {navigation.map((item) => (
                     <button
