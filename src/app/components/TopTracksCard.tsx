@@ -16,13 +16,13 @@ export default function TopTracksCard({
         <p className=" max-w-lg text-4xl font-semibold tracking-tight text-balance text-neutral-200 sm:text-5xl">
           Top Tracks
         </p>
-        <Button className="bg-neutral-800 text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-600 cursor-pointer transition-colors">
+        <Button className="bg-neutral-800/50 backdrop-blur-lg shadow-sm text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-500/50 cursor-pointer transition-colors">
           <IconShare2 size={18} />
           <p className="text-sm font-medium">Share</p>
         </Button>
       </div>
-      <div className="overflow-hidden  rounded-lg bg-neutral-800 shadow-sm mt-3 sm:mt-4 md:mt-6">
-        <div className="px-4 py-5 sm:p-6 pt-0  ">
+      <div className="overflow-hidden  rounded-lg bg-neutral-800/50 backdrop-blur-lg shadow-sm mt-3 sm:mt-4 md:mt-6">
+        <div className="px-4 py-3 sm:px-6">
           <ul role="list" className="divide-y divide-neutral-700">
             {loading ? (
               <li key={1} className="flex justify-between gap-x-6 py-5">
