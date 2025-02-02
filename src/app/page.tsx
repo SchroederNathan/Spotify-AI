@@ -102,9 +102,16 @@ export default function Home() {
           <div className="mt-10 flex items-center gap-x-6">
             <Button
               onClick={() => handleSignIn()}
-              className="rounded-md cursor-pointer bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="rounded-md cursor-pointer flex items-center bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
             >
-              Get started
+              <Image
+                src="/images/spotify-logo-white.png"
+                width={18}
+                height={18}
+                className="mr-2"
+                alt="Spotify Logo"
+              />
+              Log In With Spotify
             </Button>
             <a href="#" className="text-sm/6 font-semibold text-white">
               Learn more <span aria-hidden="true">→</span>

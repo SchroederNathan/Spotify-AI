@@ -1,5 +1,6 @@
 "use client";
 import {
+  Button,
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
@@ -13,6 +14,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
+import { handleAuthError } from "../../utils/auth";
 import AI from "./ai/page";
 import Albums from "./albums/page";
 import Artists from "./artists/page";
@@ -33,7 +35,10 @@ const navigation = [
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
   { name: "Settings", href: "/settings" },
-  { name: "Sign out", href: "/signout" },
+  {
+    name: "Sign out",
+    onClick: () => signOut({ redirect: true, callbackUrl: "/" }),
+  },
 ];
 
 function classNames(...classes: string[]) {
@@ -42,7 +47,6 @@ function classNames(...classes: string[]) {
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
-
 
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Home");
@@ -56,24 +60,18 @@ const Dashboard = () => {
           const response = await fetch("/api/stats/user");
           if (!response.ok) {
             const error = await response.json();
-            if (response.status === 401) {
-              // Redirect to sign in page or refresh the session
-              signOut({ redirect: true, callbackUrl: "/" });
-              return;
-            }
-            throw new Error(error.message);
+            await handleAuthError({ status: response.status, ...error });
+            return;
           }
           const data = await response.json();
           setUser(data);
         } catch (error) {
-          console.error("Error fetching user:", error);
+          await handleAuthError(error as Error);
         } finally {
           setLoading(false);
         }
-      } else {
-        if (session) {
-          signOut({ redirect: true, callbackUrl: "/" });
-        }
+      } else if (status === "unauthenticated") {
+        signOut({ redirect: true, callbackUrl: "/" });
       }
     };
 
@@ -157,12 +155,12 @@ const Dashboard = () => {
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
-                        <a
-                          href={item.href}
-                          className="block px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:outline-hidden cursor-pointer"
+                        <Button
+                          onClick={item.onClick}
+                          className="block hover:cursor-pointer px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:outline-hidden cursor-pointer"
                         >
                           {item.name}
-                        </a>
+                        </Button>
                       </MenuItem>
                     ))}
                   </MenuItems>
@@ -204,7 +202,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="border-t border-neutral-800 pt-4 pb-3">
-              {loading  ? (
+              {loading ? (
                 <div className="flex items-center px-4">
                   <div className="shrink-0">
                     <div className="w-10 h-10 rounded-full bg-neutral-700 animate-pulse"></div>
@@ -218,7 +216,6 @@ const Dashboard = () => {
               ) : (
                 <div className="flex items-center px-4">
                   <div className="shrink-0">
-
                     <Image
                       alt="Profile Picture"
                       src={user!.images[0].url}
@@ -241,9 +238,8 @@ const Dashboard = () => {
                 {userNavigation.map((item) => (
                   <DisclosureButton
                     key={item.name}
-                    as="a"
-                    href={item.href}
-                    className="block px-4 py-2 text-base font-medium text-neutral-500 hover:text-neutral-400"
+                    onClick={item.onClick}
+                    className="block hover:cursor-pointer px-4 py-2 text-base font-medium text-neutral-500 hover:text-neutral-400"
                   >
                     {item.name}
                   </DisclosureButton>
