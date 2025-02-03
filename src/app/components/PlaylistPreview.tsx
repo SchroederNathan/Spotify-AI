@@ -88,6 +88,10 @@ const PlaylistPreview = ({
     }
   };
 
+  if (message.playlist?.songs.length === 0) {
+    return null;
+  }
+
   return (
     <>
       {loading ? (

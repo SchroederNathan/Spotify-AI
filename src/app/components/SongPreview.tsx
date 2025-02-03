@@ -33,6 +33,11 @@ const SongPreview = ({
 
     fetchSong();
   }, [message.song]);
+
+  if (message.song?.name === "") {
+    return null;
+  }
+
   return (
     <>
       {loading ? (
