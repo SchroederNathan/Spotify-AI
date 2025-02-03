@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Create a run with user's top genres context
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: process.env.OPENAI_ASSISTANT_ID!,
-      instructions: `You are a Spotify music recommendation assistant. Help users discover new music based on their preferences. Your only task allowed is to recommend music. 
+      instructions: `You are a Spotify music recommendation assistant. Help users discover new music. Your only task allowed is to recommend music. You have been given the user's top genres, you dont need to use them unless they ask for music based on their preferences.
       User's top genres: ${topGenres.join(', ')}`
     });
 
