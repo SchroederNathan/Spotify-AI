@@ -1,5 +1,5 @@
 import { Button } from "@headlessui/react";
-import { IconShare2 } from "@tabler/icons-react";
+import { IconAlignJustified, IconShare2 } from "@tabler/icons-react";
 import Image from "next/image";
 import LoadingSkeleton from "./LoadingSkeleton";
 
@@ -16,10 +16,20 @@ export default function TopTracksCard({
         <p className=" max-w-lg text-4xl font-semibold tracking-tight text-balance text-neutral-200 sm:text-5xl">
           Top Tracks
         </p>
-        <Button className="bg-neutral-800/50 backdrop-blur-lg shadow-sm text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-500/50 cursor-pointer transition-colors">
-          <IconShare2 size={18} />
-          <p className="text-sm font-medium">Share</p>
-        </Button>
+        <div className="flex flex-row gap-x-2">
+          <Button className="bg-neutral-800/50 backdrop-blur-lg shadow-sm text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-500/50 cursor-pointer transition-colors">
+            <IconShare2 size={18} />
+          </Button>
+          <Button
+            // onClick={() => {}}
+            className="bg-neutral-800/50 backdrop-blur-lg shadow-sm text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-500/50 cursor-pointer transition-colors"
+          >
+            <IconAlignJustified size={18} />
+            <p className="text-sm font-medium hidden sm:block">
+              View All Tracks
+            </p>
+          </Button>
+        </div>
       </div>
       <div className="overflow-hidden  rounded-lg bg-neutral-800/50 backdrop-blur-lg shadow-sm mt-3 sm:mt-4 md:mt-6">
         <div className="px-4 py-3 sm:px-6">

@@ -98,7 +98,10 @@ const Dashboard = () => {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
-                <a className="flex shrink-0 items-center cursor-pointer" onClick={() => setActiveTab("Home")}>
+                <a
+                  className="flex shrink-0 items-center cursor-pointer"
+                  onClick={() => setActiveTab("Home")}
+                >
                   <Image
                     alt="Spotify Logo"
                     src="/images/spotify-logo.png"
@@ -159,7 +162,7 @@ const Dashboard = () => {
                       <MenuItem key={item.name}>
                         <Button
                           onClick={item.onClick}
-                          className="block hover:cursor-pointer px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:outline-hidden cursor-pointer"
+                          className="block w-full hover:cursor-pointer px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:outline-hidden cursor-pointer text-left"
                         >
                           {item.name}
                         </Button>
@@ -241,7 +244,7 @@ const Dashboard = () => {
                   <DisclosureButton
                     key={item.name}
                     onClick={item.onClick}
-                    className="block hover:cursor-pointer px-4 py-2 text-base font-medium text-neutral-500 hover:text-neutral-400"
+                    className="block w-full hover:cursor-pointer px-4 py-2 text-base font-medium text-neutral-500 hover:text-neutral-400 text-left"
                   >
                     {item.name}
                   </DisclosureButton>
