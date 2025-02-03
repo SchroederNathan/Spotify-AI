@@ -13,6 +13,7 @@ const Overview = () => {
   const [songs, setSongs] = useState<Track[]>([]);
   const statsRef = useRef<HTMLDivElement>(null);
 
+  const [loadingUser, setLoadingUser] = useState(true);
   const [loadingSongs, setLoadingSongs] = useState(true);
   const [loadingAlbums, setLoadingAlbums] = useState(true);
   useEffect(() => {
@@ -27,6 +28,7 @@ const Overview = () => {
       } catch (error) {
         console.error("Error fetching user:", error);
       }
+      setLoadingUser(false);
     };
 
     const fetchAlbums = async () => {
@@ -64,6 +66,14 @@ const Overview = () => {
       <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-neutral-900/10 ring-inset" />
     </div>
   );
+
+  if (loadingUser) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-neutral-800 border-t-green-500" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -126,7 +136,7 @@ const Overview = () => {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      statsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                      statsRef.current?.scrollIntoView({ behavior: "smooth" });
                     }}
                     className="rounded-md flex h-12 items-center gap-x-2 text-sm font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                   >
@@ -151,14 +161,14 @@ const Overview = () => {
             </div>
           </div>
         </div>
-        <div 
-          className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24" 
+        <div
+          className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24"
           ref={statsRef}
         >
           <h2 className=" text-base/7 font-semibold text-green-600">
             Past {timeRangeLabels[TimeRanges.Short]}
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-18" >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-18">
             <TopTracksCard loading={loadingSongs} songs={songs} />
             <TopAlbumsCard loading={loadingAlbums} albums={albums} />
           </div>
