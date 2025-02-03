@@ -78,6 +78,8 @@ const Dashboard = () => {
     fetchUser();
   }, [session, status]);
 
+  console.log(session);
+
   if (status === "loading") {
     return (
       <div className="flex h-screen w-full items-center justify-center">

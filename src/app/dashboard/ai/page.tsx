@@ -95,7 +95,7 @@ const AI = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)]">
+    <div className="flex flex-col absolute right-3 left-3 top-36 bottom-3 max-w-4xl mx-auto">
       <div
         ref={chatContainerRef}
         className="flex-1 space-y-4 overflow-y-auto mb-4"
