@@ -1,21 +1,26 @@
 "use client";
 
+import RecentlyPlayedCard from "@/app/components/RecentlyPlayedCard";
 import { timeRangeLabels, TimeRanges } from "@/app/components/TimeRange";
 import TopAlbumsCard from "@/app/components/TopAlbumsCard";
 import TopTracksCard from "@/app/components/TopTracksCard";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Overview = () => {
   const [user, setUser] = useState<User>();
   const [albums, setAlbums] = useState<Album[]>([]);
   const [songs, setSongs] = useState<Track[]>([]);
+  const [recentlyPlayed, setRecentlyPlayed] = useState<RecentlyPlayedTrack[]>(
+    []
+  );
   const statsRef = useRef<HTMLDivElement>(null);
 
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingSongs, setLoadingSongs] = useState(true);
   const [loadingAlbums, setLoadingAlbums] = useState(true);
+  const [loadingRecentlyPlayed, setLoadingRecentlyPlayed] = useState(true);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,9 +50,17 @@ const Overview = () => {
       setLoadingSongs(false);
     };
 
+    const fetchRecentlyPlayed = async () => {
+      const response = await fetch("/api/stats/recently-played");
+      const data = await response.json();
+      setRecentlyPlayed(data);
+      setLoadingRecentlyPlayed(false);
+    };
+
     fetchUser();
     fetchAlbums();
     fetchSongs();
+    fetchRecentlyPlayed();
   }, []);
 
   const AlbumImage = ({ album, index }: { album?: Album; index: number }) => (
@@ -171,6 +184,10 @@ const Overview = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-18">
             <TopTracksCard loading={loadingSongs} songs={songs} />
             <TopAlbumsCard loading={loadingAlbums} albums={albums} />
+            <RecentlyPlayedCard
+              loading={loadingRecentlyPlayed}
+              songs={recentlyPlayed}
+            />
           </div>
         </div>
       </div>

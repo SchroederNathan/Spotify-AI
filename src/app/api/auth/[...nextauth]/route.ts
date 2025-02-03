@@ -10,7 +10,7 @@ const options: NextAuthOptions = {
       authorization: {
         params: {
           scope:
-            "user-read-email playlist-read-private playlist-modify-private playlist-modify-public user-top-read",
+            "user-read-email playlist-read-private playlist-modify-private playlist-modify-public user-top-read user-read-recently-played",
         },
       },
     }),
