@@ -41,7 +41,7 @@ const Genres = () => {
                 <p className="w-32 h-2 rounded-sm bg-neutral-700 animate-pulse"></p>              </li>
             ))
           : genres.map((genre, index) => (
-              <li key={genre} className="flex justify-between gap-x-6 py-5">
+              <li key={index} className="flex justify-between gap-x-6 py-5">
                 <div className="flex min-w-0 gap-x-4 items-center">
               <span className="text-sm text-neutral-400 w-4">{index + 1}.</span>
               <p className="text-sm/6 font-semibold text-white">{genre}</p>

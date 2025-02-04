@@ -37,7 +37,7 @@ const Playlists = () => {
           ))
         : playlists.map((playlist, index) => (
             <li
-              key={playlist.name}
+              key={index}
               className="flex justify-between gap-x-6 py-5"
             >
               <div className="flex min-w-0 gap-x-4 items-center">

@@ -2,11 +2,18 @@ import { type NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import SpotifyProvider from "next-auth/providers/spotify";
 
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+
+if (!clientId || !clientSecret) {
+  throw new Error("Missing required environment variables");
+}
+
 const options: NextAuthOptions = {
   providers: [
     SpotifyProvider({
-      clientId: process.env.CLIENT_ID || "",
-      clientSecret: process.env.CLIENT_SECRET || "",
+      clientId,
+      clientSecret,
       authorization: {
         params: {
           scope:
@@ -32,12 +39,39 @@ const options: NextAuthOptions = {
       return session;
     },
     async signIn({ user, account, profile }) {
-      console.log("Sign in attempt:", { user, account, profile });
-      if (!account || !profile) {
-        console.error("Missing account or profile");
+      try {
+        console.log("Sign in attempt:", { user, account, profile });
+
+        if (!account || !profile) {
+          console.error("Missing account or profile");
+          throw new Error("Invalid authentication response");
+        }
+
+        // Validate required Spotify permissions
+        const requiredScopes = [
+          "user-read-email",
+          "playlist-read-private",
+          "playlist-modify-private",
+          "playlist-modify-public",
+          "user-top-read",
+          "user-read-recently-played",
+        ];
+
+        const grantedScopes = account.scope?.split(" ") || [];
+        const missingScopes = requiredScopes.filter(
+          (scope) => !grantedScopes.includes(scope)
+        );
+
+        if (missingScopes.length > 0) {
+          console.error("Missing required scopes:", missingScopes);
+          throw new Error("Insufficient permissions");
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Sign in error:", error);
         return false;
       }
-      return true;
     },
     async redirect({ url, baseUrl }) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
