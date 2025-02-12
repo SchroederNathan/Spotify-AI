@@ -58,7 +58,7 @@ const Overview = () => {
 
     const fetchRecentlyPlayed = async () => {
       const response = await fetch(
-        `/api/stats/recently-played?time_range=${timeRange}`
+        `/api/stats/recently-played?time_range=${timeRange}&limit=30`
       );
       const data = await response.json();
       setRecentlyPlayed(data);

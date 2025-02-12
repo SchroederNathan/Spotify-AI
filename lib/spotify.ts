@@ -26,11 +26,17 @@ export const getUser = async (req: NextApiRequest) => {
   });
 };
 
-export const recentlyPlayed = async (req: NextApiRequest) => {
+export const recentlyPlayed = async (
+  req: NextApiRequest,
+  limit: number = 30
+) => {
   const { access_token } = await getAccessToken(req);
-  return fetch("https://api.spotify.com/v1/me/player/recently-played?limit=10", {
-    headers: { Authorization: `Bearer ${access_token}` },
-  });
+  return fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${access_token}` },
+    }
+  );
 };
 
 export const topTracks = async (

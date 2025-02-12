@@ -5,7 +5,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const response = await recentlyPlayed(req);
+    const response = await recentlyPlayed(
+      req,
+      req.query.limit ? parseInt(req.query.limit as string) : undefined
+    );
     if (!response.ok) {
       throw new Error(
         `Error fetching recently played tracks: ${response.statusText}`
