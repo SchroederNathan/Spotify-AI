@@ -43,13 +43,13 @@ export const topTracks = async (
   { time_range }: { time_range?: string },
   req: NextApiRequest
 ) => {
-  const { access_token } = await getAccessToken(req);
+    const { access_token } = await getAccessToken(req);
   return fetch(
-    `https://api.spotify.com/v1/me/top/tracks?time_range=${
-      time_range || "short_term"
+      `https://api.spotify.com/v1/me/top/tracks?time_range=${
+        time_range || "short_term"
     }`,
     { headers: { Authorization: `Bearer ${access_token}` } }
-  );
+    );
 };
 
 export const topArtists = async (

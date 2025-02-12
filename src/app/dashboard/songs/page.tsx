@@ -2,6 +2,7 @@
 
 import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import TimeRange, { TimeRanges } from "@/app/components/TimeRange";
+import { handleAuthError } from "@/utils/auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -14,16 +15,19 @@ const Songs = () => {
     const fetchTracks = async () => {
       try {
         const response = await fetch(
-          `api/stats/tracks?time_range=${timeRange}`
+          `/api/stats/tracks?time_range=${timeRange}`
         );
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
         }
         const data = await response.json();
         setSongs(data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching tracks:", error);
+        await handleAuthError(error as Error);
       }
     };
 

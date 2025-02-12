@@ -2,11 +2,11 @@
 
 import RecentlyPlayedCard from "@/app/components/RecentlyPlayedCard";
 import TimeRange, {
-  timeRangeLabels,
-  TimeRanges,
+  TimeRanges
 } from "@/app/components/TimeRange";
 import TopAlbumsCard from "@/app/components/TopAlbumsCard";
 import TopTracksCard from "@/app/components/TopTracksCard";
+import { handleAuthError } from "@/utils/auth";
 import { IconArrowDown } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -32,37 +32,78 @@ const Overview = () => {
       try {
         const response = await fetch("/api/stats/user");
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
         }
         const data = await response.json();
         setUser(data);
       } catch (error) {
         console.error("Error fetching user:", error);
+        await handleAuthError(error as Error);
+      } finally {
+        setLoadingUser(false);
       }
-      setLoadingUser(false);
     };
 
     const fetchAlbums = async () => {
-      const response = await fetch(`/api/stats/albums?time_range=${timeRange}`);
-      const data = await response.json();
-      setAlbums(data);
-      setLoadingAlbums(false);
+      try {
+        const response = await fetch(
+          `/api/stats/albums?time_range=${timeRange}`
+        );
+        if (!response.ok) {
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
+        }
+        const data = await response.json();
+        setAlbums(data);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+        await handleAuthError(error as Error);
+      } finally {
+        setLoadingAlbums(false);
+      }
     };
 
     const fetchSongs = async () => {
-      const response = await fetch(`/api/stats/tracks?time_range=${timeRange}`);
-      const data = await response.json();
-      setSongs(data);
-      setLoadingSongs(false);
+      try {
+        const response = await fetch(
+          `/api/stats/tracks?time_range=${timeRange}`
+        );
+        if (!response.ok) {
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
+        }
+        const data = await response.json();
+        setSongs(data);
+      } catch (error) {
+        console.error("Error fetching songs:", error);
+        await handleAuthError(error as Error);
+      } finally {
+        setLoadingSongs(false);
+      }
     };
 
     const fetchRecentlyPlayed = async () => {
-      const response = await fetch(
-        `/api/stats/recently-played?time_range=${timeRange}&limit=30`
-      );
-      const data = await response.json();
-      setRecentlyPlayed(data);
-      setLoadingRecentlyPlayed(false);
+      try {
+        const response = await fetch(
+          `/api/stats/recently-played?time_range=${timeRange}&limit=30`
+        );
+        if (!response.ok) {
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
+        }
+        const data = await response.json();
+        setRecentlyPlayed(data);
+      } catch (error) {
+        console.error("Error fetching recently played:", error);
+        await handleAuthError(error as Error);
+      } finally {
+        setLoadingRecentlyPlayed(false);
+      }
     };
 
     fetchUser();
@@ -186,7 +227,11 @@ const Overview = () => {
           className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24"
           ref={statsRef}
         >
-          <TimeRange timeRange={timeRange} setTimeRange={setTimeRange} className="mb-4" />
+          <TimeRange
+            timeRange={timeRange}
+            setTimeRange={setTimeRange}
+            className="mb-4"
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-18">
             <TopTracksCard loading={loadingSongs} songs={songs} />

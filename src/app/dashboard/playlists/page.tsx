@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSkeleton from "@/app/components/LoadingSkeleton";
+import { handleAuthError } from "@/utils/auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -10,17 +11,19 @@ const Playlists = () => {
 
   useEffect(() => {
     const fetchPlaylists = async () => {
-      setLoading(true);
       try {
-        const response = await fetch("api/stats/playlists");
+        const response = await fetch("/api/stats/playlists");
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
         }
         const data = await response.json();
         setPlaylists(data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching playlists:", error);
+        await handleAuthError(error as Error);
       }
     };
 
@@ -36,10 +39,7 @@ const Playlists = () => {
             </li>
           ))
         : playlists.map((playlist, index) => (
-            <li
-              key={index}
-              className="flex justify-between gap-x-6 py-5"
-            >
+            <li key={index} className="flex justify-between gap-x-6 py-5">
               <div className="flex min-w-0 gap-x-4 items-center">
                 <span className="text-sm text-neutral-400 w-4">
                   {index + 1}.

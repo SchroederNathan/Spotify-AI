@@ -2,6 +2,7 @@
 
 import PlaylistPreview from "@/app/components/PlaylistPreview";
 import SongPreview from "@/app/components/SongPreview";
+import { handleAuthError } from "@/utils/auth";
 import { Button, Textarea } from "@headlessui/react";
 import { IconSend } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -18,13 +19,16 @@ const AI = () => {
       try {
         const response = await fetch(`api/stats/genres?time_range=short_term`);
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
         }
         const data = await response.json();
         // Take only the first 5 genres from the response
         setTopGenres(data.slice(0, 5));
       } catch (error) {
         console.error("Error fetching genres:", error);
+        await handleAuthError(error as Error);
       }
     };
 

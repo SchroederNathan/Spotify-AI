@@ -2,6 +2,7 @@
 
 import LoadingSkeleton from "@/app/components/LoadingSkeleton";
 import TimeRange, { TimeRanges } from "@/app/components/TimeRange";
+import { handleAuthError } from "@/utils/auth";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -12,20 +13,21 @@ const Artists = () => {
 
   useEffect(() => {
     const fetchTracks = async () => {
-      setLoading(true);
       try {
         const response = await fetch(
-          `api/stats/artists?time_range=${timeRange}`
+          `/api/stats/artists?time_range=${timeRange}`
         );
-        console.log(timeRange);
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const error = await response.json();
+          await handleAuthError({ status: response.status, ...error });
+          return;
         }
         const data = await response.json();
         setArtists(data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching tracks:", error);
+        await handleAuthError(error as Error);
       }
     };
 
@@ -43,10 +45,7 @@ const Artists = () => {
               </li>
             ))
           : artists.map((artist, index) => (
-              <li
-                key={index}
-                className="flex justify-between gap-x-6 py-5"
-              >
+              <li key={index} className="flex justify-between gap-x-6 py-5">
                 <div className="flex min-w-0 gap-x-4 items-center">
                   <span className="text-sm text-neutral-400 w-4">
                     {index + 1}.
