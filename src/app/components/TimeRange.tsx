@@ -16,12 +16,14 @@ export const timeRangeLabels = {
 const TimeRange = ({
   timeRange,
   setTimeRange,
+  className,
 }: {
   timeRange: TimeRanges;
   setTimeRange: (timeRange: TimeRanges) => void;
+  className?: string;
 }) => {
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className={`relative inline-block text-left ${className}`}>
       <div>
         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-neutral-900 px-3 py-2 text-sm font-semibold text-white ring-1 shadow-xs ring-neutral-700 ring-inset hover:bg-neutral-800">
           {timeRangeLabels[timeRange]}
@@ -43,7 +45,6 @@ const TimeRange = ({
           <MenuItem>
             {() => (
               <a
-                href="#"
                 onClick={() => setTimeRange(TimeRanges.Short)}
                 className="block px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:text-white data-focus:outline-hidden"
               >
@@ -54,7 +55,6 @@ const TimeRange = ({
           <MenuItem>
             {() => (
               <a
-                href="#"
                 onClick={() => setTimeRange(TimeRanges.Medium)}
                 className="block px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:text-white data-focus:outline-hidden"
               >
@@ -65,7 +65,6 @@ const TimeRange = ({
           <MenuItem>
             {() => (
               <a
-                href="#"
                 onClick={() => setTimeRange(TimeRanges.Long)}
                 className="block px-4 py-2 text-sm text-neutral-400 data-focus:bg-neutral-700 data-focus:text-white data-focus:outline-hidden"
               >

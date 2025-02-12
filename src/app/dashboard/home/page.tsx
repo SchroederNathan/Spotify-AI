@@ -1,7 +1,10 @@
 "use client";
 
 import RecentlyPlayedCard from "@/app/components/RecentlyPlayedCard";
-import { timeRangeLabels, TimeRanges } from "@/app/components/TimeRange";
+import TimeRange, {
+  timeRangeLabels,
+  TimeRanges,
+} from "@/app/components/TimeRange";
 import TopAlbumsCard from "@/app/components/TopAlbumsCard";
 import TopTracksCard from "@/app/components/TopTracksCard";
 import { IconArrowDown } from "@tabler/icons-react";
@@ -15,6 +18,9 @@ const Overview = () => {
   const [recentlyPlayed, setRecentlyPlayed] = useState<RecentlyPlayedTrack[]>(
     []
   );
+
+  const [timeRange, setTimeRange] = useState(TimeRanges.Short);
+
   const statsRef = useRef<HTMLDivElement>(null);
 
   const [loadingUser, setLoadingUser] = useState(true);
@@ -37,21 +43,23 @@ const Overview = () => {
     };
 
     const fetchAlbums = async () => {
-      const response = await fetch("/api/stats/albums?time_range=short_term");
+      const response = await fetch(`/api/stats/albums?time_range=${timeRange}`);
       const data = await response.json();
       setAlbums(data);
       setLoadingAlbums(false);
     };
 
     const fetchSongs = async () => {
-      const response = await fetch("/api/stats/tracks?time_range=short_term");
+      const response = await fetch(`/api/stats/tracks?time_range=${timeRange}`);
       const data = await response.json();
       setSongs(data);
       setLoadingSongs(false);
     };
 
     const fetchRecentlyPlayed = async () => {
-      const response = await fetch("/api/stats/recently-played");
+      const response = await fetch(
+        `/api/stats/recently-played?time_range=${timeRange}`
+      );
       const data = await response.json();
       setRecentlyPlayed(data);
       setLoadingRecentlyPlayed(false);
@@ -61,7 +69,7 @@ const Overview = () => {
     fetchAlbums();
     fetchSongs();
     fetchRecentlyPlayed();
-  }, []);
+  }, [timeRange]);
 
   const AlbumImage = ({ album, index }: { album?: Album; index: number }) => (
     <div className="relative" key={index}>
@@ -178,9 +186,8 @@ const Overview = () => {
           className="container mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24"
           ref={statsRef}
         >
-          <h2 className=" text-base/7 font-semibold text-green-600">
-            Past {timeRangeLabels[TimeRanges.Short]}
-          </h2>
+          <TimeRange timeRange={timeRange} setTimeRange={setTimeRange} className="mb-4" />
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-18">
             <TopTracksCard loading={loadingSongs} songs={songs} />
             <TopAlbumsCard loading={loadingAlbums} albums={albums} />
