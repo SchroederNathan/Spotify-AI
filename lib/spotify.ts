@@ -3,6 +3,7 @@ import { getToken } from "next-auth/jwt";
 
 interface SpotifyToken {
   accessToken: string;
+  sub: string;
 }
 
 const getAccessToken = async (req: NextApiRequest) => {
@@ -16,7 +17,16 @@ const getAccessToken = async (req: NextApiRequest) => {
     throw new Error("No access token found");
   }
 
-  return { access_token: token.accessToken };
+  // Verify the user ID matches
+  const userId = token.sub;
+  if (!userId) {
+    throw new Error("No user ID found");
+  }
+
+  return { 
+    access_token: token.accessToken,
+    user_id: userId
+  };
 };
 
 export const getUser = async (req: NextApiRequest) => {

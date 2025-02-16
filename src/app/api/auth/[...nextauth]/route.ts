@@ -36,6 +36,7 @@ const options: NextAuthOptions = {
       session.accessToken = token.accessToken as string;
       session.refreshToken = token.refreshToken as string;
       session.expiresAt = token.expiresAt as number;
+      session.userId = token.sub as string;
       return session;
     },
     async signIn({ user, account, profile }) {

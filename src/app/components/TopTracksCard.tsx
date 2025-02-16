@@ -1,8 +1,8 @@
 import { Button } from "@headlessui/react";
 import { IconAlignJustified, IconShare2 } from "@tabler/icons-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import LoadingSkeleton from "./LoadingSkeleton";
-
 export default function TopTracksCard({
   loading,
   songs,
@@ -10,6 +10,7 @@ export default function TopTracksCard({
   loading: boolean;
   songs: Track[];
 }) {
+  const router = useRouter();
   return (
     <div className="w-full">
       <div className="flex-row flex justify-between">
@@ -21,7 +22,9 @@ export default function TopTracksCard({
             <IconShare2 size={18} />
           </Button>
           <Button
-            // onClick={() => {}}
+            onClick={() => {
+              router.push("/dashboard/songs");
+            }}
             className="bg-neutral-800/50 backdrop-blur-lg shadow-sm text-white flex flex-row items-center gap-x-2 px-4 rounded-lg hover:bg-green-500/50 cursor-pointer transition-colors"
           >
             <IconAlignJustified size={18} />

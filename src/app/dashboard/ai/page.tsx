@@ -17,7 +17,7 @@ const AI = () => {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await fetch(`api/stats/genres?time_range=short_term`);
+        const response = await fetch(`/api/stats/genres?time_range=short_term`);
         if (!response.ok) {
           const error = await response.json();
           await handleAuthError({ status: response.status, ...error });
@@ -68,7 +68,13 @@ const AI = () => {
       });
 
       const data = await res.json();
-      const parsedMessage = JSON.parse(data.message.text.value);
+      let parsedMessage;
+      try {
+        parsedMessage = JSON.parse(data.message.text.value);
+      } catch (error) {
+        console.error("Error parsing message:", error);
+        throw new Error("Invalid response format from AI assistant");
+      }
 
       // Add AI response to chat history
       setChatHistory((prev) => [

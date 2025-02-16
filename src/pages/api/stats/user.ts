@@ -1,6 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getUser } from "../../../../lib/spotify";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+    refreshToken?: string;
+    expiresAt?: number;
+    userId?: string;
+  }
+}
+
 export const handleApiError = (error: Error, res: NextApiResponse) => {
   console.error("API Error:", error);
 
