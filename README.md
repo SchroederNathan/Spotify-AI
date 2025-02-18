@@ -1,6 +1,6 @@
 # Spotify AI Stats
 
-![Spotify AI Stats Preview](https://i.imgur.com/jqIKGzR.png)
+![Spotify AI Stats Preview](https://i.imgur.com/CtlZrZi.jpeg)
 
 A web application that provides personalized Spotify music recommendations using AI, along with detailed statistics about your listening habits. The app integrates with Spotify's API and OpenAI's assistant API to deliver intelligent music suggestions based on your preferences and listening history.
 
