@@ -62,8 +62,10 @@ interface SpotifyRefreshTokenResponse {
  */
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-    
+    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString(
+      "base64"
+    );
+
     const response = await fetch(SPOTIFY_API.TOKEN, {
       method: "POST",
       headers: {
@@ -83,7 +85,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     }
 
     console.log("Token refreshed successfully");
-    
+
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
@@ -125,7 +127,9 @@ export const authOptions: NextAuthOptions = {
           ...token,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-          accessTokenExpires: account.expires_at ? account.expires_at * 1000 : undefined, // Convert to milliseconds
+          accessTokenExpires: account.expires_at
+            ? account.expires_at * 1000
+            : undefined, // Convert to milliseconds
           user,
         };
       }
@@ -147,7 +151,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async signIn({  account, profile }) {
+    async signIn({ account, profile }) {
       try {
         if (!account || !profile) {
           console.error("Missing account or profile");
@@ -163,7 +167,9 @@ export const authOptions: NextAuthOptions = {
 
         if (missingScopes.length > 0) {
           console.error("Missing required scopes:", missingScopes);
-          throw new Error(`Insufficient permissions: ${missingScopes.join(", ")}`);
+          throw new Error(
+            `Insufficient permissions: ${missingScopes.join(", ")}`
+          );
         }
 
         return true;
@@ -182,4 +188,4 @@ export const authOptions: NextAuthOptions = {
     signIn: "/",
     error: "/", // Redirect to home page on error
   },
-}; 
+};
