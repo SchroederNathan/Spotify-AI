@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
-    const response = await getUser(request as any);
+    const response = await getUser(request as NextRequest);
     
     if (!response.ok) {
       const error = await response.json();

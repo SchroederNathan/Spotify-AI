@@ -2,7 +2,7 @@ import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
 interface SpotifyToken {
   accessToken?: string;
@@ -20,22 +20,22 @@ export const getAccessToken = async (req: NextApiRequest | NextRequest) => {
     // For App Router API routes
     if (req instanceof NextRequest) {
       const session = await getServerSession(authOptions);
-      
+
       if (!session) {
         throw new Error("Not authenticated");
       }
-      
+
       if (!session.accessToken) {
         throw new Error("No access token found");
       }
-      
+
       if (session.error === "RefreshAccessTokenError") {
         throw new Error("Failed to refresh access token");
       }
-      
+
       return { access_token: session.accessToken };
     }
-    
+
     // For Pages Router API routes
     const token = (await getToken({ req })) as SpotifyToken | null;
 
@@ -46,7 +46,7 @@ export const getAccessToken = async (req: NextApiRequest | NextRequest) => {
     if (!token.accessToken) {
       throw new Error("No access token found");
     }
-    
+
     if (token.error === "RefreshAccessTokenError") {
       throw new Error("Failed to refresh access token");
     }
@@ -67,17 +67,19 @@ export const getUser = async (req: NextApiRequest | NextRequest) => {
   try {
     const { access_token } = await getAccessToken(req);
     const response = await fetch("https://api.spotify.com/v1/me", {
-      headers: { 
+      headers: {
         Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -94,18 +96,20 @@ export const recentlyPlayed = async (
     const response = await fetch(
       `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
       {
-        headers: { 
+        headers: {
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching recently played:", error);
@@ -123,19 +127,21 @@ export const topTracks = async (
       `https://api.spotify.com/v1/me/top/tracks?time_range=${
         time_range || "short_term"
       }&limit=50`,
-      { 
-        headers: { 
+      {
+        headers: {
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
-        } 
+          "Content-Type": "application/json",
+        },
       }
     );
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching top tracks:", error);
@@ -153,19 +159,21 @@ export const topArtists = async (
       `https://api.spotify.com/v1/me/top/artists?time_range=${
         time_range || "short_term"
       }&limit=50`,
-      { 
-        headers: { 
+      {
+        headers: {
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
-        } 
+          "Content-Type": "application/json",
+        },
       }
     );
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching top artists:", error);
@@ -173,7 +181,10 @@ export const topArtists = async (
   }
 };
 
-export const topAlbums = async (req: NextApiRequest | NextRequest, time_range: string) => {
+export const topAlbums = async (
+  req: NextApiRequest | NextRequest,
+  time_range: string
+) => {
   try {
     const { access_token } = await getAccessToken(req);
     const response = await fetch(
@@ -183,16 +194,18 @@ export const topAlbums = async (req: NextApiRequest | NextRequest, time_range: s
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching top albums:", error);
@@ -200,7 +213,10 @@ export const topAlbums = async (req: NextApiRequest | NextRequest, time_range: s
   }
 };
 
-export const topGenres = async (req: NextApiRequest | NextRequest, time_range: string) => {
+export const topGenres = async (
+  req: NextApiRequest | NextRequest,
+  time_range: string
+) => {
   try {
     const { access_token } = await getAccessToken(req);
     const response = await fetch(
@@ -210,16 +226,18 @@ export const topGenres = async (req: NextApiRequest | NextRequest, time_range: s
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching top genres:", error);
@@ -233,15 +251,17 @@ export const userPlaylists = async (req: NextApiRequest | NextRequest) => {
     const response = await fetch("https://api.spotify.com/v1/me/playlists", {
       headers: {
         Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Spotify API error: ${error.error?.message || response.statusText}`);
+      throw new Error(
+        `Spotify API error: ${error.error?.message || response.statusText}`
+      );
     }
-    
+
     return response;
   } catch (error) {
     console.error("Error fetching user playlists:", error);
