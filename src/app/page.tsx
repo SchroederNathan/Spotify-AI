@@ -1,13 +1,14 @@
 "use client";
 import { Button } from "@headlessui/react";
 import { IconChevronRight } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
+  // signOut({ redirect: true, callbackUrl: "/" })
 
   console.log(session);
 

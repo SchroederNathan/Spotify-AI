@@ -1,13 +1,13 @@
 "use client";
 import {
-    Button,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
+  Button,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
 } from "@headlessui/react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
@@ -50,36 +50,79 @@ export default function DashboardLayout({
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>();
+  const [error, setError] = useState<string | null>(null);
 
   const currentTab =
     navigation.find((item) => item.href === pathname)?.key || "Home";
 
   useEffect(() => {
+    // Check for session errors
+    if (session?.error === "RefreshAccessTokenError") {
+      console.error("Failed to refresh access token");
+      signOut({ redirect: true, callbackUrl: "/" });
+      return;
+    }
+
     const fetchUser = async () => {
-      if (status === "authenticated" && session) {
+      if (status === "authenticated" && session?.accessToken) {
         try {
+          setLoading(true);
           const response = await fetch("/api/stats/user");
+          
           if (!response.ok) {
-            const error = await response.json();
-            await handleAuthError({ status: response.status, ...error });
+            const errorData = await response.json();
+            await handleAuthError({ 
+              status: response.status, 
+              message: errorData.error || response.statusText 
+            });
             return;
           }
+          
           const data = await response.json();
           setUser(data);
+          setError(null);
         } catch (error) {
+          console.error("Error fetching user data:", error);
+          setError("Failed to load user data");
           await handleAuthError(error as Error);
         } finally {
           setLoading(false);
         }
       } else if (status === "unauthenticated") {
-        signOut({ redirect: true, callbackUrl: "/" });
+        router.push("/");
       }
     };
 
     fetchUser();
-  }, [session, status]);
+  }, [session, status, router]);
 
-  if (status === "loading") {
+  // Show loading state
+  if (status === "loading" || (status === "authenticated" && loading && !user)) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-neutral-800 border-t-green-500" />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <div className="text-red-500 text-xl font-semibold">{error}</div>
+        <button
+          onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+        >
+          Sign Out
+        </button>
+      </div>
+    );
+  }
+
+  // Show unauthenticated state
+  if (status === "unauthenticated") {
+    router.push("/");
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-neutral-800 border-t-green-500" />
@@ -140,12 +183,12 @@ export default function DashboardLayout({
                     <MenuButton className="relative flex max-w-xs items-center rounded-full bg-neutral-500 text-sm focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-hidden cursor-pointer">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      {loading ? (
+                      {loading || !user || !user.images || user.images.length === 0 ? (
                         <div className="w-8 h-8 rounded-full bg-neutral-700 animate-pulse"></div>
                       ) : (
                         <Image
                           alt="Profile Picture"
-                          src={user!.images[0].url}
+                          src={user.images[0].url}
                           width={32}
                           height={32}
                           className="size-8 rounded-full"
@@ -206,7 +249,7 @@ export default function DashboardLayout({
               ))}
             </div>
             <div className="border-t border-neutral-800 pt-4 pb-3">
-              {loading ? (
+              {loading || !user || !user.images || user.images.length === 0 ? (
                 <div className="flex items-center px-4">
                   <div className="shrink-0">
                     <div className="w-10 h-10 rounded-full bg-neutral-700 animate-pulse"></div>
@@ -222,7 +265,7 @@ export default function DashboardLayout({
                   <div className="shrink-0">
                     <Image
                       alt="Profile Picture"
-                      src={user!.images[0].url}
+                      src={user.images[0].url}
                       width={40}
                       height={40}
                       className="rounded-full"
